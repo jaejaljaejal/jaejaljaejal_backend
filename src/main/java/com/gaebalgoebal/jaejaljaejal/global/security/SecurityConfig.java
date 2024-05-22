@@ -16,12 +16,12 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
-        http.csrf(AbstractHttpConfigurer::disable)
-                .formLogin(Customizer.withDefaults())
+        http.oauth2Login(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequest ->
                     authorizeRequest
                         .requestMatchers(
-                                AntPathRequestMatcher.antMatcher("/auth/**")
+                                AntPathRequestMatcher.antMatcher("/")
                         ).authenticated()
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/h2-console/**")
