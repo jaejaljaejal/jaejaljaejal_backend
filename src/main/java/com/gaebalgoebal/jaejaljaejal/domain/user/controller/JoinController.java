@@ -11,17 +11,28 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api")
 public class JoinController {
 
     private final UserService userService;
 
-    @PostMapping("/email/check")
+    @GetMapping("/email/check")
     @CrossOrigin(origins="*")
-    public ResponseEntity<String> checkEmail(@RequestBody @Valid EmailDto emailDto){
+    public ResponseEntity<String> checkEmail(@Valid EmailDto emailDto){
         if (userService.checkEmail(emailDto)){
-            return ResponseEntity.badRequest().body("Email is already in use.");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use.");
         }else {
             return ResponseEntity.ok("email duplicate check success!");
+        }
+    }
+
+    @GetMapping("/nickname/check")
+    @CrossOrigin(origins="*")
+    public ResponseEntity<String> checkNickname(@RequestParam("nickname") String nickname){
+        if (userService.checkNickname(nickname)){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("nickname is already in use.");
+        }else {
+            return ResponseEntity.ok("nickname duplicate check success!");
         }
     }
 

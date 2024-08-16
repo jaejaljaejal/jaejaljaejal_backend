@@ -31,6 +31,12 @@ public class UserService {
         return userRepository.existsByEmail(emailDto.getEmail());
     }
 
+    @Transactional(readOnly = true)
+    public boolean checkNickname(String nickname){
+        return userRepository.existsByNickname(nickname);
+    }
+
+
     @Transactional
     public void createUser(UserCreateDto user){
         User saveUser = User.builder()
@@ -45,6 +51,7 @@ public class UserService {
                 .loginMothod(LoginMothod.EMAIL)
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
+                .term("Y")
                 .build();
 
         userRepository.save(saveUser);

@@ -5,8 +5,6 @@ import com.gaebalgoebal.jaejaljaejal.domain.user.LoginMothod;
 import com.gaebalgoebal.jaejaljaejal.domain.user.Role;
 import com.gaebalgoebal.jaejaljaejal.domain.user.UserState;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -63,8 +61,11 @@ public class User {
     @Column(name = "modified_date", nullable = false)
     private LocalDateTime modifiedDate;
 
+    @Column(name = "term", nullable = false)
+    private String term;
+
     @Builder
-    public User(String email, String nickname, String password, String cellPhoneNumber, LocalDate birthDate, Gender gender, Role role, UserState userState, LoginMothod loginMothod, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public User(String email, String nickname, String password, String cellPhoneNumber, LocalDate birthDate, Gender gender, Role role, UserState userState, LoginMothod loginMothod, LocalDateTime createdDate, LocalDateTime modifiedDate, String term) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;
@@ -76,5 +77,6 @@ public class User {
         this.loginMothod = loginMothod;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+        this.term = term;
     }
 }
