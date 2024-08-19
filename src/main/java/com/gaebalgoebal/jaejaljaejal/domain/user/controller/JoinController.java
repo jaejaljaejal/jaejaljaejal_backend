@@ -16,7 +16,7 @@ public class JoinController {
 
     private final UserService userService;
 
-    @GetMapping("/email/check")
+    @GetMapping("/email/check/")
     @CrossOrigin(origins="*")
     public ResponseEntity<String> checkEmail(@Valid EmailDto emailDto){
         if (userService.checkEmail(emailDto)){
@@ -26,9 +26,9 @@ public class JoinController {
         }
     }
 
-    @GetMapping("/nickname/check")
+    @GetMapping("/nickname/check/{nickname}")
     @CrossOrigin(origins="*")
-    public ResponseEntity<String> checkNickname(@RequestParam("nickname") String nickname){
+    public ResponseEntity<String> checkNickname(@PathVariable("nickname") String nickname){
         if (userService.checkNickname(nickname)){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("nickname is already in use.");
         }else {
