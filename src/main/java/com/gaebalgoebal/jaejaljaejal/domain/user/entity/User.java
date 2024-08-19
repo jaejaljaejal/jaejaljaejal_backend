@@ -1,9 +1,6 @@
 package com.gaebalgoebal.jaejaljaejal.domain.user.entity;
 
-import com.gaebalgoebal.jaejaljaejal.domain.user.Gender;
-import com.gaebalgoebal.jaejaljaejal.domain.user.LoginMothod;
-import com.gaebalgoebal.jaejaljaejal.domain.user.Role;
-import com.gaebalgoebal.jaejaljaejal.domain.user.UserState;
+import com.gaebalgoebal.jaejaljaejal.domain.user.*;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -61,11 +58,12 @@ public class User {
     @Column(name = "modified_date", nullable = false)
     private LocalDateTime modifiedDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "term", nullable = false)
-    private String term;
+    private YesNo term;
 
     @Builder
-    public User(String email, String nickname, String password, String cellPhoneNumber, LocalDate birthDate, Gender gender, Role role, UserState userState, LoginMothod loginMothod, LocalDateTime createdDate, LocalDateTime modifiedDate, String term) {
+    public User(String email, String nickname, String password, String cellPhoneNumber, LocalDate birthDate, Gender gender, Role role, UserState userState, LoginMothod loginMothod, LocalDateTime createdDate, LocalDateTime modifiedDate, YesNo term) {
         this.email = email;
         this.nickname = nickname;
         this.password = password;

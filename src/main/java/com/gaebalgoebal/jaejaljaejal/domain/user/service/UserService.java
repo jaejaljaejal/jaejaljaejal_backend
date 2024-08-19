@@ -1,9 +1,6 @@
 package com.gaebalgoebal.jaejaljaejal.domain.user.service;
 
-import com.gaebalgoebal.jaejaljaejal.domain.user.Gender;
-import com.gaebalgoebal.jaejaljaejal.domain.user.LoginMothod;
-import com.gaebalgoebal.jaejaljaejal.domain.user.Role;
-import com.gaebalgoebal.jaejaljaejal.domain.user.UserState;
+import com.gaebalgoebal.jaejaljaejal.domain.user.*;
 import com.gaebalgoebal.jaejaljaejal.domain.user.dto.EmailDto;
 import com.gaebalgoebal.jaejaljaejal.domain.user.dto.UserCreateDto;
 import com.gaebalgoebal.jaejaljaejal.domain.user.entity.User;
@@ -36,7 +33,6 @@ public class UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-
     @Transactional
     public void createUser(UserCreateDto user){
         User saveUser = User.builder()
@@ -51,7 +47,7 @@ public class UserService {
                 .loginMothod(LoginMothod.EMAIL)
                 .createdDate(LocalDateTime.now())
                 .modifiedDate(LocalDateTime.now())
-                .term("Y")
+                .term(YesNo.YES)
                 .build();
 
         userRepository.save(saveUser);
@@ -61,7 +57,7 @@ public class UserService {
         Random random = new Random();
 
         return random.ints(48, 123)
-                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 | i >= 97))
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
                 .limit(6)
                 .collect(StringBuilder::new , StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString();
