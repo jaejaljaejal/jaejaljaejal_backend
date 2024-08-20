@@ -20,8 +20,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception{
         http.oauth2Login(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .httpBasic(AbstractHttpConfigurer::disable)
-                .formLogin(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorizeRequest ->
                     authorizeRequest
                         .requestMatchers(
@@ -31,7 +29,8 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/h2-console/**"),
                                 AntPathRequestMatcher.antMatcher("/api/user/**"),
                                 AntPathRequestMatcher.antMatcher("/api/nickname/**"),
-                                AntPathRequestMatcher.antMatcher("/api/email/**")
+                                AntPathRequestMatcher.antMatcher("/api/email/**"),
+                                AntPathRequestMatcher.antMatcher("/api/verityCode/**")
                         ).permitAll()
                 ).headers(
                     headersConfigurer ->

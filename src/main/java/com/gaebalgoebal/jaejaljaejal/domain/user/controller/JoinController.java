@@ -2,6 +2,7 @@ package com.gaebalgoebal.jaejaljaejal.domain.user.controller;
 
 import com.gaebalgoebal.jaejaljaejal.domain.user.dto.EmailDto;
 import com.gaebalgoebal.jaejaljaejal.domain.user.dto.UserCreateDto;
+import com.gaebalgoebal.jaejaljaejal.domain.user.service.EmailService;
 import com.gaebalgoebal.jaejaljaejal.domain.user.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +16,12 @@ import org.springframework.web.bind.annotation.*;
 public class JoinController {
 
     private final UserService userService;
+    private final EmailService emailService;
 
     @GetMapping("/email/check/")
     @CrossOrigin(origins="*")
     public ResponseEntity<String> checkEmail(@Valid EmailDto emailDto){
-        if (userService.checkEmail(emailDto)){
+        if (userService.checkEmail(emailDto.getEmail())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Email is already in use.");
         }else {
             return ResponseEntity.ok("email duplicate check success!");
@@ -47,9 +49,18 @@ public class JoinController {
     @PostMapping("/email/send")
     @CrossOrigin(origins="*")
     public ResponseEntity<String> sendMail(@RequestBody @Valid EmailDto emailDto){
-        userService.sendVerityCodeEmail(emailDto);
+        emailService.sendVerityCodeEmail(emailDto);
 
         return ResponseEntity.ok("send verity code email");
     }
 
+    @PostMapping("/verityCode/confirm")
+    public ResponseEntity<String> verityCodeCheck(@RequestBody @Valid EmailDto emailDto){
+        boolean verified = userService.verifyCode(emailDto);
+        if (verified){
+            return ResponseEntity.ok("Email verified successfully.");
+        }else {
+            return ResponseEntity.badRequest().body("Invalid or expired verification code.");
+        }
+    }
 }

@@ -6,6 +6,7 @@ import com.gaebalgoebal.jaejaljaejal.domain.user.dto.UserCreateDto;
 import com.gaebalgoebal.jaejaljaejal.domain.user.entity.User;
 import com.gaebalgoebal.jaejaljaejal.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -21,11 +22,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JavaMailSender javaMailSender;
+    private final StringRedisTemplate redisTemplate;
+
 
     @Transactional(readOnly = true)
-    public boolean checkEmail(EmailDto emailDto){
-        return userRepository.existsByEmail(emailDto.getEmail());
+    public boolean checkEmail(String email){
+        return userRepository.existsByEmail(email);
     }
 
     @Transactional(readOnly = true)
@@ -63,13 +65,12 @@ public class UserService {
                 .toString();
     }
 
-    @Transactional
-    public void sendVerityCodeEmail(EmailDto emailDto){
-        SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-
-        simpleMailMessage.setTo(emailDto.getEmail());
-        simpleMailMessage.setSubject("재잘재잘 가입 인증번호");
-        simpleMailMessage.setText("인증 번호는 " + createVerityCode() + " 입니다.");
-        javaMailSender.send(simpleMailMessage);
+    public boolean verifyCode(EmailDto emailDto){
+        String redisVerifyCode = redisTemplate.opsForValue().get(emailDto.getEmail());
+        if (redisVerifyCode != null && redisVerifyCode.equals(emailDto.getVerityCode())){
+            redisTemplate.delete(emailDto.getEmail());
+            return true;
+        }
+        return false;
     }
 }
